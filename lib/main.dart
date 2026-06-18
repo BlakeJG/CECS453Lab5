@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'models/mortgagemodel.dart';
 import 'preferences.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final savedData = await Preferences.loadData();
@@ -13,11 +12,10 @@ void main() async {
     ChangeNotifierProvider(
       create: (context) {
         // Add initial data from saved preferences to the provider
-        // FIXME: Fix preference saving only amount works rn
         final provider = MortgageProvider();
-        provider.price = savedData['price'] ?? 0.0;
-        provider.interestRate = savedData['rate'] ?? 0.0;
-        provider.years = savedData['years'] ?? 10;
+        provider.price = savedData[Preferences.keyPrice] ?? 0.0;
+        provider.interestRate = savedData[Preferences.keyRate] ?? 0.0;
+        provider.years = savedData[Preferences.keyYears] ?? 10;
         return provider;
       },
       child: const MainApp()
@@ -103,8 +101,7 @@ class _MortgageCalculatorState extends State<MortgageCalculator> {
                 mort.years = value; // Update the value in the provider
               }
               setState(() {
-                // FIXME: Add a way to update the radio buttons based on preferences
-                _selectedyear = value ?? 10;
+                _selectedyear = mort.years;
               });
             },
             child: Container(
@@ -149,7 +146,7 @@ class _MortgageCalculatorState extends State<MortgageCalculator> {
                               setState(() {
                                 _termsAccepted = !_termsAccepted;
                               });
-                            }, // We tried getting the checkbox to show and we had it working on DartPad but not on VSCode
+                            },
                             child: const Text('OK'),
                           ),
                         ],
@@ -165,7 +162,7 @@ class _MortgageCalculatorState extends State<MortgageCalculator> {
             onPressed: () {
               saveValues(context, mort); // Save to preferences
               Navigator.push(context, MaterialPageRoute(builder: (context) => CalculationScreen()),); // Go to next screen
-            }, // Put context.read to call functions and go to new page
+            },
             child: Text("Done"),
           ),
         ],

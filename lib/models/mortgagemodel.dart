@@ -33,7 +33,7 @@ class MortgageProvider extends ChangeNotifier {
       return 0.0;
     }
     double mRate = (_interestRate / 100) / 12;
-    double temp = pow(1 / (1 + mRate), years * 12).toDouble();
+    double temp = pow(1 / (1 + mRate), _years * 12).toDouble();
     return _price * mRate / (1 - temp);
   }
 
